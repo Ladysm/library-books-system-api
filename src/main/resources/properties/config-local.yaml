@@ -1,0 +1,15 @@
+"mule":
+  "env": "local"
+
+"http":
+  "listener":
+    "port": "8081"
+    "host": "localhost"
+    "basePath": "/api"
+
+  "request":
+    "protocol": "http"
+    "host": "localhost"
+    "url": "https://mule-oauth-provider-n4cgic.av6c76.usa-e1.cloudhub.io/validate"
+    
+  

@@ -1,0 +1,8 @@
+"mule":
+  "env": "dev"
+
+"http":
+  "listener":
+    "port": "8081"
+    "host": "0.0.0.0"
+    "basePath": "/api"

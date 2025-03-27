@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="common-errorError_Handler" doc:id="c04ef779-1b13-427a-b4a6-3402143aa40c" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="999c276a-2168-427d-9473-075b2566ea9a" type="DB:CONNECTIVITY">
+				<logger level="ERROR" doc:name="log-db-connectivity-error" doc:id="6718149a-d256-4e5a-949f-b922c40721bd" message="#[error.description]" />
+			<set-payload value="#[output application/json&#10;---&#10;{&#10;  error: &quot;DB connectivity issue&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-db-connectivity-error" doc:id="3199ed37-83a6-496e-ac54-e81d2e508e37" />
+			</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="581a068e-5f08-4929-9e8c-228594c5fd10" type="DB:QUERY_EXECUTION&#10;&#10;">
+			<logger level="ERROR" doc:name="log-db-query-error" doc:id="f7d7b5de-e935-4454-8f40-dc786e50488f" message="#[error.description]" />
+			<set-payload value="#[output application/json&#10;---&#10;{&#10;  error: &quot;Query execution error&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-db-query-error" doc:id="74d93844-7d02-4b74-90c7-23a63771dc50" />
+		</on-error-propagate>
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9d7f655c-b12d-4db6-8d1b-7bc02c0ca295" type="APP:BOOK_NOT_FOUND">
+			<logger level="ERROR" doc:name="log-http-not-found-error" doc:id="820c9654-e83d-4ccb-b709-29450e702973" message="#[error.description&#93;" />
+			<set-variable value='#["404"&#93;' doc:name="set-http-status" doc:id="75cbdfde-7b82-4ace-a673-fd11b20e2a03" variableName="httpStatus"/>
+			<set-payload value="#[output application/json&#10;&#45;&#45;-&#10;{&#10;  error: &quot;Resource not found&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}&#93;" doc:name="set-http-not-found-error" doc:id="2f237d13-5049-48e1-86af-07d3b338496b" />
+		</on-error-propagate> [STUDIO] -->
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="343d9101-3137-41ae-9543-c0b82cc73112" type="HTTP:UNAUTHORIZED">
+			<logger level="ERROR" doc:name="log-authentication-error" doc:id="2173dc3a-3cda-459f-afb5-b53996ace6c2" message="#[error.description]" />
+			<set-payload value="#[output application/json&#10;---&#10;{&#10;   error: &quot;Authentication error&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-authentication-error" doc:id="0069e069-4988-4cd6-8b46-c05885d73ead" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f95160a5-7464-44a1-b739-dba8cba480ae" type="RETRY_EXHAUSTED">
+			<logger level="ERROR" doc:name='log-retry-exhausted-error' doc:id="e9040599-a98b-43d2-90fe-96d7ca9f7723" message="#[error.description]" />
+			<set-payload value="#[output application/json&#10;---&#10;{&#10;   error: &quot;Retry exhausted&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-retry-exhausted-error" doc:id="b03b2f00-7cbd-48c6-800c-c75b9748372b" />
+		</on-error-propagate>
+	</error-handler>
+</mule>

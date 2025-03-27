@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<sub-flow name="global-secured-oauth2-configSub_Flow" doc:id="cf15b865-862c-4899-8c5a-ff6fd552b17b" >
+		<logger level="INFO" doc:name="Logger" doc:id="639e2b23-2e75-43d3-ac36-c232c663b2ae" message='#["Validating access token from headers"]' />
+		<!-- [STUDIO:"Is not null"]<validation:is-not-null doc:name="Is not null" doc:id="37dea30b-b4c0-43fd-a265-52471ed0bda0" config-ref="Validation_Config" value="#[attributes.headers.Authorization&#93;" message='#["Authorization header is missing or empty"&#93;'/> [STUDIO] -->
+		<set-variable value="#[(attributes.headers.Authorization )]" doc:name="accessToken" doc:id="37103a6d-d06b-4761-8e63-4c95c39cd63d" variableName="accessToken" />
+		<http:request method="POST" doc:name="Validate OAuth Token Request" doc:id="b3d7fe28-e433-4fbe-a06f-892c33fdb109" config-ref="HTTP_Request_configuration" url="${http.request.url}">
+			<http:headers ><![CDATA[#[{
+"Authorization" : vars.accessToken
+}]]]></http:headers>
+		</http:request>
+	</sub-flow>
+</mule>

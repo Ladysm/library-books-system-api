@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+    <apikit:config name="library-books-sapi-config" api="resource::209ef67a-ae27-4f34-965a-a34fed477013:library-books-sapi:1.0.0:raml:zip:library-books-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<flow name="library-books-sapi-main">
+        <http:listener path="/api/*" config-ref="HTTP_Listener_config">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="library-books-sapi-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="library-books-sapi-console">
+        <http:listener path="/console/*" config-ref="HTTP_Listener_config">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="library-books-sapi-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="put:\books\(id):application\json:library-books-sapi-config">
+        <logger level="INFO" doc:name="start" doc:id="f38f9ba1-c087-4bbd-9550-02d8223289d1" message="#[payload]"/>
+		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="cae61227-3e49-4931-8485-8e56cbaa11d9" name="global-secured-oauth2-configSub_Flow" />
+		<flow-ref doc:name="clients-put-by-id-books" doc:id="09ae4a9e-d769-4316-b363-f1750dd63618" name="clients-put-by-id-books" />
+		<flow-ref doc:name="Flow Reference" doc:id="96c6609e-19f2-469b-8124-b91157329bf8" name="orchestrator-put-by-id-books" />
+		<logger level="INFO" doc:name="end" doc:id="aa1c5b08-3804-4b79-84c1-9db70b924db4" message="#[payload]"/>
+    </flow>
+	<flow name="patch:\books\(id):application\json:library-books-sapi-config">
+        <logger level="INFO" doc:name="start" doc:id="63d96127-8354-4026-b660-0bc25730fd6a" message="#[payload]" />
+		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="36d278f8-405e-46cb-b263-358c0e4cb171" name="global-secured-oauth2-configSub_Flow" />
+		<flow-ref doc:name="clients-patch-by-id-books" doc:id="95132d34-edd5-43ad-8656-f0bbad1ad5ff" name="clients-patch-by-id-books" />
+		<flow-ref doc:name="orchestrator-patch-by-id-books" doc:id="855f3d1b-0249-4d7d-af5f-29d632356a5c" name="orchestrator-patch-by-id-books" />
+		<logger level="INFO" doc:name="end" doc:id="cf0fd22d-1d05-495d-9bf6-39c79a27b217" message="#[payload]" />
+    </flow>
+    <flow name="get:\books:application\json:library-books-sapi-config">
+		<logger level="INFO" doc:name="start" doc:id="e6d67ebd-0183-4798-9486-27782cdfd1d0" message="#[payload]" />
+		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="55ed1658-d8bc-49b9-b76c-257b16d23df7" name="global-secured-oauth2-configSub_Flow" />
+		<flow-ref doc:name="clients-get-books" doc:id="625d1e27-da64-4b6e-994f-3dd34f16cb31" name="clients-get-books" />
+		<flow-ref doc:name="orchestrator-get-books" doc:id="9aa51d5c-bda5-438c-9280-f70ce1890d4a" name="orchestrator-get-books" />
+		<logger level="INFO" doc:name="end" doc:id="d6c7ec31-c792-40ed-ad5d-e965f5989eb7" message="#[payload]" />
+    </flow>
+    <flow name="get:\books\(id):library-books-sapi-config">
+        <logger level="INFO" doc:name="start" doc:id="b46ecf36-c08f-42cd-8356-9eec3362f33c" message="#[payload]" />
+		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="19bd29ab-5c0b-41d3-8441-3b9eca55caa0" name="global-secured-oauth2-configSub_Flow" />
+		<!-- [STUDIO:"Is number"]<validation:is-number doc:name="Is number" doc:id="47283760-e1b5-4418-bc6d-d56cd1b2ff71" value="#[attributes.uriParams.id&#93;" numberType="INTEGER"/> [STUDIO] -->
+		<flow-ref doc:name="clients-get-by-id-books" doc:id="04cf4bb8-ef7c-4a75-8182-d2fe9487c6c2" name="clients-get-by-id-books" />
+		<!-- [STUDIO:"Logger"]<logger level="INFO" doc:name="Logger" doc:id="b0592d35-6110-4269-9f82-036aca90a0a5" message="#[payload&#93;"/> [STUDIO] -->
+		<flow-ref doc:name="orchestrator-get-by-id-books" doc:id="10d7db6c-4deb-4912-9df5-0f52c09c765f" name="orchestrator-get-by-id-books" />
+		<!-- [STUDIO:"Choice"]<choice doc:name="Choice" doc:id="832393b6-a946-480c-9966-73bab552314f" >
+			<when expression="#[isEmpty(payload)&#93;">
+				<raise-error doc:name="Raise error" doc:id="afff95bc-4f16-4d1b-8c83-155c4aef6fa4" type="APP:BOOK_NOT_FOUND" description='"Book not found"'/>
+			</when>
+			<otherwise >
+				<flow-ref doc:name="orchestrator-get-by-id-books" doc:id="28586f77-6d17-4d39-91f0-1a58a88edf52" name="orchestrator-get-by-id-books" />
+			</otherwise>
+		</choice> [STUDIO] -->
+		<logger level="INFO" doc:name="end" doc:id="d3ca0a8c-a4e1-43f7-acf7-22543fe3b1f7" message="#[payload]" />
+    </flow>
+	<flow name="post:\books:application\json:library-books-sapi-config">
+		<logger level="INFO" doc:name="start" doc:id="ae8c58a2-e3bc-4bca-86d1-247bd3e553f7" message="#[payload]" />
+		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="167a9eea-9317-4fba-a9cd-f25dcb24791b" name="global-secured-oauth2-configSub_Flow" />
+		<flow-ref doc:name="clients-post-books" doc:id="7e121f2d-9cd2-429c-91bd-370beef0da48" name="clients-post-books" />
+		<flow-ref doc:name="orchestrator-post-by-id-books" doc:id="ff294e76-2107-4eb0-b95f-f6abca3ccfd9" name="orchestrator-post-by-id-books" />
+		<logger level="INFO" doc:name="end" doc:id="b3b56d11-460e-4568-866e-d201ead23ec3" message="#[payload]" />
+    </flow>
+</mule>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="clients-patch-by-id-books" doc:id="cb5436b8-4dbc-4769-b99e-bd4c56b8510c" >
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="e54f0c62-09df-45e2-aff8-330685735c35" >
+			<db:update doc:name="update-library-books-by-id-db" doc:id="cb6e85db-5c38-4f69-9ddc-2bba95976b23" config-ref="Database_Config">
+			<db:sql><![CDATA[UPDATE movie_catalog.books
+SET title = :title,
+    author = :author,
+    publishedYear = :publishedYear,
+    genre = :genre,
+    isbn = :isbn,
+    pageCount = :pageCount,
+    language = :language,
+    availableCopies = :availableCopies
+WHERE id = :id;
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+  "id": attributes.uriParams.id,
+  "title": payload.title,
+  "author": payload.author,
+  "publishedYear": payload.publishedYear,
+  "genre": payload.genre,
+  "isbn": payload.isbn,
+  "pageCount": payload.pageCount,
+  "language": payload.language,
+  "availableCopies": payload.availableCopies
+}]]]></db:input-parameters>
+		</db:update>
+		</until-successful>
+	</flow>
+</mule>
