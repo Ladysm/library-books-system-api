@@ -13,11 +13,11 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			<logger level="ERROR" doc:name="log-db-query-error" doc:id="f7d7b5de-e935-4454-8f40-dc786e50488f" message="#[error.description]" />
 			<set-payload value="#[output application/json&#10;---&#10;{&#10;  error: &quot;Query execution error&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-db-query-error" doc:id="74d93844-7d02-4b74-90c7-23a63771dc50" />
 		</on-error-propagate>
-		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9d7f655c-b12d-4db6-8d1b-7bc02c0ca295" type="APP:BOOK_NOT_FOUND">
-			<logger level="ERROR" doc:name="log-http-not-found-error" doc:id="820c9654-e83d-4ccb-b709-29450e702973" message="#[error.description&#93;" />
-			<set-variable value='#["404"&#93;' doc:name="set-http-status" doc:id="75cbdfde-7b82-4ace-a673-fd11b20e2a03" variableName="httpStatus"/>
-			<set-payload value="#[output application/json&#10;&#45;&#45;-&#10;{&#10;  error: &quot;Resource not found&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}&#93;" doc:name="set-http-not-found-error" doc:id="2f237d13-5049-48e1-86af-07d3b338496b" />
-		</on-error-propagate> [STUDIO] -->
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9d7f655c-b12d-4db6-8d1b-7bc02c0ca295" type="APP:BOOK_NOT_FOUND">
+			<logger level="ERROR" doc:name="log-http-not-found-error" doc:id="820c9654-e83d-4ccb-b709-29450e702973" message="#[error.description]" />
+			<set-variable value='#["404"]' doc:name="set-http-status" doc:id="75cbdfde-7b82-4ace-a673-fd11b20e2a03" variableName="httpStatus"/>
+			<set-payload value="#[output application/json&#10;---&#10;{&#10;  error: &quot;Resource not found&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-http-not-found-error" doc:id="2f237d13-5049-48e1-86af-07d3b338496b" />
+		</on-error-propagate>
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="343d9101-3137-41ae-9543-c0b82cc73112" type="HTTP:UNAUTHORIZED">
 			<logger level="ERROR" doc:name="log-authentication-error" doc:id="2173dc3a-3cda-459f-afb5-b53996ace6c2" message="#[error.description]" />
 			<set-payload value="#[output application/json&#10;---&#10;{&#10;   error: &quot;Authentication error&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-authentication-error" doc:id="0069e069-4988-4cd6-8b46-c05885d73ead" />

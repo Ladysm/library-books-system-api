@@ -150,16 +150,14 @@ output application/json
 		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="19bd29ab-5c0b-41d3-8441-3b9eca55caa0" name="global-secured-oauth2-configSub_Flow" />
 		<!-- [STUDIO:"Is number"]<validation:is-number doc:name="Is number" doc:id="47283760-e1b5-4418-bc6d-d56cd1b2ff71" value="#[attributes.uriParams.id&#93;" numberType="INTEGER"/> [STUDIO] -->
 		<flow-ref doc:name="clients-get-by-id-books" doc:id="04cf4bb8-ef7c-4a75-8182-d2fe9487c6c2" name="clients-get-by-id-books" />
-		<!-- [STUDIO:"Logger"]<logger level="INFO" doc:name="Logger" doc:id="b0592d35-6110-4269-9f82-036aca90a0a5" message="#[payload&#93;"/> [STUDIO] -->
-		<flow-ref doc:name="orchestrator-get-by-id-books" doc:id="10d7db6c-4deb-4912-9df5-0f52c09c765f" name="orchestrator-get-by-id-books" />
-		<!-- [STUDIO:"Choice"]<choice doc:name="Choice" doc:id="832393b6-a946-480c-9966-73bab552314f" >
-			<when expression="#[isEmpty(payload)&#93;">
+		<choice doc:name="Choice" doc:id="832393b6-a946-480c-9966-73bab552314f" >
+			<when expression="#[isEmpty(payload)]">
 				<raise-error doc:name="Raise error" doc:id="afff95bc-4f16-4d1b-8c83-155c4aef6fa4" type="APP:BOOK_NOT_FOUND" description='"Book not found"'/>
 			</when>
 			<otherwise >
 				<flow-ref doc:name="orchestrator-get-by-id-books" doc:id="28586f77-6d17-4d39-91f0-1a58a88edf52" name="orchestrator-get-by-id-books" />
 			</otherwise>
-		</choice> [STUDIO] -->
+		</choice>
 		<logger level="INFO" doc:name="end" doc:id="d3ca0a8c-a4e1-43f7-acf7-22543fe3b1f7" message="#[payload]" />
     </flow>
 	<flow name="post:\books:application\json:library-books-sapi-config">
