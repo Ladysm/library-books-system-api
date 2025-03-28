@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<sub-flow name="validate-book-idSub_Flow" doc:id="1d06c2b4-8fdf-4b5f-ad5c-4a1b14550cd3" >
+		<validation:is-number numberType="INTEGER" doc:name="Is number" doc:id="691aae53-a20f-4b96-830d-d17c31b6f3f3" config-ref="Validation_Config" value="#[attributes.uriParamas.id]"/>
+	</sub-flow>
+</mule>
