@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 			<db:select doc:name="select-library-books-by-id-db" doc:id="2759a594-065b-41d0-9882-6794b7a75080" config-ref="Database_Config">
 			<db:sql><![CDATA[SELECT * FROM movie_catalog.books WHERE id= :id]]></db:sql>
 			<db:input-parameters><![CDATA[#[{
-"id": attributes.uriParams.id
+	"id":vars.id
 }]]]></db:input-parameters>
 		</db:select>
 		</until-successful>
