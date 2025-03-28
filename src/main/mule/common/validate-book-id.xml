@@ -5,6 +5,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 	<sub-flow name="validate-book-idSub_Flow" doc:id="1d06c2b4-8fdf-4b5f-ad5c-4a1b14550cd3" >
-		<validation:is-number numberType="INTEGER" doc:name="Is number" doc:id="691aae53-a20f-4b96-830d-d17c31b6f3f3" config-ref="Validation_Config" value="#[attributes.uriParamas.id]"/>
+		<!-- [STUDIO:"book-id"]<set-variable value="#[attributes.uriParams.id&#93;" doc:name="book-id" doc:id="e38a9ae8-2ce7-4f94-8d1a-8b14b15a1c84" variableName="bookId"/> [STUDIO] -->
+		<validation:is-number numberType="INTEGER" doc:name="Is number" doc:id="691aae53-a20f-4b96-830d-d17c31b6f3f3" config-ref="Validation_Config" value="#[vars.id]"/>
 	</sub-flow>
 </mule>
