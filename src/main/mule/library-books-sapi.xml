@@ -150,8 +150,6 @@ output application/json
 		<set-variable value="#[attributes.uriParams.id]" doc:name="id-book" doc:id="ddb7e056-ed75-49b5-b4d4-b63149719d38" variableName="id"/>
 		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="19bd29ab-5c0b-41d3-8441-3b9eca55caa0" name="global-secured-oauth2-configSub_Flow" />
 		<flow-ref doc:name="validate-book-id-sub-flow" doc:id="32ec0480-09ab-45d3-bb09-4e5a7ebdecaf" name="validate-book-idSub_Flow"/>
-		<!-- [STUDIO:"Logger"]<logger level="INFO" doc:name="Logger" doc:id="392ff160-6a65-42c0-96f0-a6384eb1ffae" message='#[vars.id as String ++ "esto es lo que esta apsando"&#93;'/> [STUDIO] -->
-		<!-- [STUDIO:"Is number"]<validation:is-number doc:name="Is number" doc:id="47283760-e1b5-4418-bc6d-d56cd1b2ff71" value="#[attributes.uriParams.id&#93;" numberType="INTEGER"/> [STUDIO] -->
 		<flow-ref doc:name="clients-get-by-id-books" doc:id="04cf4bb8-ef7c-4a75-8182-d2fe9487c6c2" name="clients-get-by-id-books" />
 		<choice doc:name="Choice" doc:id="832393b6-a946-480c-9966-73bab552314f" >
 			<when expression="#[isEmpty(payload)]">
