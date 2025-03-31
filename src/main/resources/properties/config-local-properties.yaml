@@ -10,6 +10,6 @@
   "request":
     "protocol": "http"
     "host": "localhost"
-    "basePath": "/validate"
+    "url": "https://mule-oauth-provider-n4cgic.av6c76.usa-e1.cloudhub.io/validate"
     
   
