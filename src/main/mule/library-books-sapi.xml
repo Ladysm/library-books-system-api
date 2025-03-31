@@ -161,7 +161,7 @@ output application/json
     </flow>
     <flow name="get:\books\(id):library-books-sapi-config">
         <logger level="INFO" doc:name="start" doc:id="b46ecf36-c08f-42cd-8356-9eec3362f33c" message="#[payload]" />
-		<set-variable value="#[attributes.uriParams.id]" doc:name="id-book" doc:id="ddb7e056-ed75-49b5-b4d4-b63149719d38" variableName="id"/>
+		<set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="ddb7e056-ed75-49b5-b4d4-b63149719d38" variableName="idBook"/>
 		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="19bd29ab-5c0b-41d3-8441-3b9eca55caa0" name="global-secured-oauth2-configSub_Flow" />
 		<flow-ref doc:name="validate-book-id-sub-flow" doc:id="32ec0480-09ab-45d3-bb09-4e5a7ebdecaf" name="validate-book-idSub_Flow"/>
 		<flow-ref doc:name="clients-get-by-id-books" doc:id="04cf4bb8-ef7c-4a75-8182-d2fe9487c6c2" name="clients-get-by-id-books" />
