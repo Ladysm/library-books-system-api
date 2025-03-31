@@ -134,7 +134,7 @@ output application/json
 	<flow name="patch:\books\(id):application\json:library-books-sapi-config">
         <logger level="INFO" doc:name="start" doc:id="63d96127-8354-4026-b660-0bc25730fd6a" message="#[payload]" />
 		<set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="ce1241b0-4040-42e1-bc5d-a82a5acd69dc" variableName="id" />
-		<set-variable value="#[payload]" doc:name="input-book-payload" doc:id="b01715b2-951c-4a3a-8baf-b43738ebd155" variableName="input-book-payload"/>
+		<set-variable value="#[payload]" doc:name="input-book-payload" doc:id="b01715b2-951c-4a3a-8baf-b43738ebd155" variableName="inputBookPayload"/>
 		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="36d278f8-405e-46cb-b263-358c0e4cb171" name="global-secured-oauth2-configSub_Flow" />
 		<logger level="INFO" doc:name="payload-postman" doc:id="ae76fe2a-bde3-4228-9b40-8f522f872443" message='#[payload.author ++ "payload de postamn"]'/>
 		<!-- [STUDIO:"clients-get-by-id-books"]<flow-ref doc:name="clients-get-by-id-books" doc:id="eed55cc0-f954-4b61-acd0-d5ef685a7703" name="clients-get-by-id-books"/> [STUDIO] -->
