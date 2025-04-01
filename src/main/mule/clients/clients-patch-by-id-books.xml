@@ -22,7 +22,7 @@ WHERE id = :id;
 output application/java
 ---
 {
-  "id": attributes.uriParams.id,
+  "id": vars.idBook,
   "title": payload.title,
   "author": payload.author,
   "publishedYear": payload.publishedYear,

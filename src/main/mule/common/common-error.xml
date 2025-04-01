@@ -24,7 +24,18 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</on-error-propagate>
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f95160a5-7464-44a1-b739-dba8cba480ae" type="RETRY_EXHAUSTED">
 			<logger level="ERROR" doc:name='log-retry-exhausted-error' doc:id="e9040599-a98b-43d2-90fe-96d7ca9f7723" message="#[error.description]" />
+			<set-variable value='#["504"]' doc:name="set-http-status-504" doc:id="59496d01-3e86-415a-b0d9-4e551eefbe39" variableName="httpStatus" />
 			<set-payload value="#[output application/json&#10;---&#10;{&#10;   error: &quot;Retry exhausted&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-retry-exhausted-error" doc:id="b03b2f00-7cbd-48c6-800c-c75b9748372b" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ce85a804-1e95-49c8-afd9-008c458e27b4" type="VALIDATION">
+			<logger level="ERROR" doc:name="log-retry-exhausted-error" doc:id="c4925441-204f-4d37-8f8b-c456aaa6dd6c" message="#[error.description]" />
+			<set-variable value='#["400"]' doc:name="set-http-status-400" doc:id="99381808-1ea2-4af8-82d9-845abcd7c7c9" variableName="httpStatus" />
+			<set-payload value="#[output application/json&#10;---&#10;{&#10;   error: &quot;Invalid parameter&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-retry-exhausted-error" doc:id="d21a720b-1851-4e13-9ac2-ca2db3224419" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d46bd2d1-5918-45f4-9cbc-8d7c73e79e9c" type="ANY">
+			<logger level="ERROR" doc:name="log-retry-exhausted-error" doc:id="db5ef691-8274-412e-9d5c-9eccf766891b" message="#[error.description]" />
+			<set-variable value='#["500"]' doc:name="set-http-status-500" doc:id="685e29ef-1c8c-4a31-b536-34d902ebff39" variableName="httpStatus" />
+			<set-payload value="#[output application/json&#10;---&#10;{&#10;   error: &quot;Unknown error&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-unknown-error" doc:id="b491fbaa-2aa8-426f-9b81-e2b9397e809c" />
 		</on-error-propagate>
 	</error-handler>
 </mule>
