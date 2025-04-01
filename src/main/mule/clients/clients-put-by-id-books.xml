@@ -6,7 +6,7 @@
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<flow name="clients-put-by-id-books" doc:id="94ea73c3-fce2-4fbb-a05a-8e684bb42da1" >
 		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="bdbf4a7d-e5bc-44be-9625-4951eca724c4" >
-			<db:update doc:name="update-library-books-by-id-db" doc:id="b9c826c6-2e1e-4753-8dee-5088ce7e4864">
+			<db:update doc:name="update-library-books-by-id-db" doc:id="b9c826c6-2e1e-4753-8dee-5088ce7e4864" config-ref="Database_Config">
 			<db:sql><![CDATA[UPDATE movie_catalog.books
 SET title = :title,
     author = :author,
@@ -22,16 +22,16 @@ WHERE id = :id;
 output application/java
 ---
 {
-  "id": attributes.uriParams.id,
-  "title": payload.title,
-  "author": payload.author,
-  "publishedYear": payload.publishedYear,
-  "genre": payload.genre,
-  "isbn": payload.isbn,
-  "pageCount": payload.pageCount,
-  "language": payload.language,
-  "availableCopies": payload.availableCopies
-}]]]></db:input-parameters>
+      id: vars.idBook ,
+      title: vars.inputBookPayload.title,
+      author: vars.inputBookPayload.author ,
+      publishedYear: vars.inputBookPayload.publishedYear ,
+      genre: vars.inputBookPayload.genre ,
+      isbn: vars.inputBookPayload.isbn ,
+      pageCount: vars.inputBookPayload.pageCount ,
+      language: vars.inputBookPayload.language ,
+      availableCopies: vars.inputBookPayload.availableCopies 
+    }]]]></db:input-parameters>
 		</db:update>
 		</until-successful>
 	</flow>
