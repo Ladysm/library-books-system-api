@@ -133,22 +133,33 @@ output application/json
     </flow>
 	<flow name="patch:\books\(id):application\json:library-books-sapi-config">
         <logger level="INFO" doc:name="start" doc:id="63d96127-8354-4026-b660-0bc25730fd6a" message="#[payload]" />
-		<set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="ce1241b0-4040-42e1-bc5d-a82a5acd69dc" variableName="id" />
+		<set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="ce1241b0-4040-42e1-bc5d-a82a5acd69dc" variableName="idBook" />
 		<set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="b01715b2-951c-4a3a-8baf-b43738ebd155" variableName="inputBookPayload"/>
 		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="36d278f8-405e-46cb-b263-358c0e4cb171" name="global-secured-oauth2-configSub_Flow" />
-		<logger level="INFO" doc:name="payload-postman" doc:id="ae76fe2a-bde3-4228-9b40-8f522f872443" message='#[payload.author ++ "payload de postamn"]'/>
-		<!-- [STUDIO:"clients-get-by-id-books"]<flow-ref doc:name="clients-get-by-id-books" doc:id="eed55cc0-f954-4b61-acd0-d5ef685a7703" name="clients-get-by-id-books"/> [STUDIO] -->
-		<!-- [STUDIO:"payload-select-operation"]<logger level="INFO" doc:name="payload-select-operation" doc:id="4e857f8b-9217-40f2-b636-67977a1c1e0a" message='#[payload.author ++ "este es el payload de la operación select"&#93;'/> [STUDIO] -->
-		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" doc:id="4053ae66-b6a4-46af-8e45-674062394654" >
+		<flow-ref doc:name="clients-get-by-id-books" doc:id="eed55cc0-f954-4b61-acd0-d5ef685a7703" name="clients-get-by-id-books"/>
+		<set-variable value="#[payload]" doc:name="currentBookData" doc:id="56a84f50-3d3d-453a-81a9-845e9fae10ff" variableName="currentBookData"/>
+		<logger level="INFO" doc:name="payload-select-operation" doc:id="4e857f8b-9217-40f2-b636-67977a1c1e0a" message='#[vars.inputBookPayload[0]]'/>
+		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" doc:id="16cc9bf4-1c20-4a51-bdd4-7415b1590fe5" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 &#45;&#45;-
-{
-}&#93;&#93;></ee:set-payload>
+vars.currentBookData&#93;&#93;></ee:set-payload>
 			</ee:message>
 		</ee:transform> [STUDIO] -->
-		<!-- [STUDIO:"clients-patch-by-id-books"]<flow-ref doc:name="clients-patch-by-id-books" doc:id="95132d34-edd5-43ad-8656-f0bbad1ad5ff" name="clients-patch-by-id-books" /> [STUDIO] -->
+		<ee:transform doc:name="Transform Message" doc:id="4053ae66-b6a4-46af-8e45-674062394654" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+import * from dw::bookUtils
+---
+removeId(
+  mergeBookUpdates(vars.currentBookData[0], vars.inputBookPayload)
+)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="46a307b1-ccb6-4aef-b179-201876619657" message="#[payload]"/>
+		<flow-ref doc:name="clients-patch-by-id-books" doc:id="95132d34-edd5-43ad-8656-f0bbad1ad5ff" name="clients-patch-by-id-books" />
 		<flow-ref doc:name="orchestrator-patch-by-id-books" doc:id="855f3d1b-0249-4d7d-af5f-29d632356a5c" name="orchestrator-patch-by-id-books" />
 		<logger level="INFO" doc:name="end" doc:id="cf0fd22d-1d05-495d-9bf6-39c79a27b217" message="#[payload]" />
     </flow>
