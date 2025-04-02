@@ -6,11 +6,8 @@
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
-	<configuration-properties doc:name="Configuration properties" doc:id="43ec48cd-e019-4e9f-ad21-87ee20b94d12" file="properties/config-${mule.env}.yaml" />
-	<configuration-properties doc:name="Configuration properties" doc:id="e3a44f48-1563-4f60-ae2a-e7b580651014" file="properties/config-secure-${mule.env}.yaml" />
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="9502dc53-1cf3-4d35-9e5a-f0dd82314b85" >
-		<http:listener-connection host="0.0.0.0" port="${http.listener.port}" />
-	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="43ec48cd-e019-4e9f-ad21-87ee20b94d12" file="properties/config-local.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="e3a44f48-1563-4f60-ae2a-e7b580651014" file="properties/config-secure-local.yaml" />
 	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="19018639-92cb-4217-9b5e-40c47308e6c6" />
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="0c44902c-0f88-45bf-82da-4f5e3fc4bb51" >
 		<http:request-connection host="${http.request.host}" />

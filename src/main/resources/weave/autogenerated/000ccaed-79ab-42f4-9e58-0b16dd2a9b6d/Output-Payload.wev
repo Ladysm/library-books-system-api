@@ -1,0 +1,16 @@
+%dw 2.0
+
+type auto_000ccaed_79ab_42f4_9e58_0b16dd2a9b6d_Output_Payload = {
+  author*: String, 
+  availableCopies*: Number, 
+  genre*: "Horror" | "Fantasy" | "Romance" | "Mystery", 
+  id*: Number, 
+  isbn*: String, 
+  language*: "English" | "Italian" | "French" | "Chinese" | "Spanish" | "German" | "Japanese" | "Other", 
+  message?: String, 
+  pageCount*: Number, 
+  publishedYear*: Number, 
+  title*: String, 
+  _?: Any
+}
+
