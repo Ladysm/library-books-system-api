@@ -14,4 +14,15 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 		</db:select>
 		</until-successful>
 	</flow>
+	<flow name="clients-get-by-isbn-booksFlow" doc:id="9a7cf9c4-c999-4c70-84b3-83a6a0b799ec" >
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="c7a52920-354c-4480-aab3-517391b35649" >
+			<db:select doc:name="select-book-by-isbn" doc:id="a313cbcd-6b06-42b6-a95e-11e133ed1131" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM books WHERE isbn = :isbn
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+"isbn": vars.inputBookPayload.isbn
+}]]]></db:input-parameters>
+		</db:select>
+		</until-successful>
+	</flow>
 </mule>

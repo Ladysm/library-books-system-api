@@ -1,0 +1,8 @@
+%dw 2.0
+
+type auto_000ccaed_79ab_42f4_9e58_0b16dd2a9b6d_Input_Attributes = {|
+  headers*: { _?: String }, 
+  reasonPhrase*: String, 
+  statusCode*: Number
+|}
+

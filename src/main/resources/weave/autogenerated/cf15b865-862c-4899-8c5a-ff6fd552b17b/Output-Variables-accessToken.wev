@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_cf15b865_862c_4899_8c5a_ff6fd552b17b_Output_Variables_accessToken = Any
+

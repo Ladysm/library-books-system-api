@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 			<db:sql><![CDATA[DELETE FROM movie_catalog.books WHERE id = :id;
 ]]></db:sql>
 			<db:input-parameters><![CDATA[#[{
-"id": attributes.uriParams.id
+"id": vars.idBook
 	
 }]]]></db:input-parameters>
 		</db:delete>
