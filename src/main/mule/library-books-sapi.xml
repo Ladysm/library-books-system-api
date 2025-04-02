@@ -198,10 +198,18 @@ removeId(
     </flow>
     <flow name="post:\books:application\json:library-books-sapi-config">
         <logger level="INFO" doc:name="start" doc:id="ae8c58a2-e3bc-4bca-86d1-247bd3e553f7" message="#[payload]" />
-        <set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="60f2868b-17f9-4f19-82ab-9666e9346bf1" variableName="idBook" />
+		<set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="bd45703e-15a7-4358-9ddd-3cee8c4aaec8" variableName="inputBookPayload" />
 		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="167a9eea-9317-4fba-a9cd-f25dcb24791b" name="global-secured-oauth2-configSub_Flow" />
-        <flow-ref doc:name="validate-book-idSub_Flow" doc:id="d7f944a3-58f0-4889-b0b6-12a70f3a2fd6" name="validate-book-idSub_Flow"/>
-		<flow-ref doc:name="clients-post-books" doc:id="7e121f2d-9cd2-429c-91bd-370beef0da48" name="clients-post-books" />
+		<flow-ref doc:name="clients-get-by-isbn-booksFlow" doc:id="5b61f4a7-a8e1-4387-91e3-fc6a87a57559" name="clients-get-by-isbn-booksFlow"/>
+		<!-- [STUDIO:"Logger"]<logger level="INFO" doc:name="Logger" doc:id="2175acba-7d5b-441c-9034-c1c201338c7f" message="#[payload&#93;"/> [STUDIO] -->
+		<choice doc:name="validate-duplicate-isbn" doc:id="30a58051-db19-44f0-a06d-7a411a9ff79a" >
+			<when expression="#[!isEmpty(payload)]">
+				<raise-error doc:name="raise-duplicate-isbn-error" doc:id="ef64465b-938a-47f4-b330-f6da9e27ad9c" type="BOOK:DUPLICATE_ISBN" description="A book with this ISBN already exists"/>
+			</when>
+			<otherwise >
+				<flow-ref doc:name="clients-post-books" doc:id="7e121f2d-9cd2-429c-91bd-370beef0da48" name="clients-post-books" />
+			</otherwise>
+		</choice>
         <flow-ref doc:name="orchestrator-post-by-id-books" doc:id="ff294e76-2107-4eb0-b95f-f6abca3ccfd9" name="orchestrator-post-by-id-books" />
         <logger level="INFO" doc:name="end" doc:id="b3b56d11-460e-4568-866e-d201ead23ec3" message="#[payload]" />
     </flow>
