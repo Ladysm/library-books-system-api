@@ -13,14 +13,14 @@ VALUES
 (:title, :author, :publishedYear, :genre, :isbn, :pageCount, :language, :availableCopies);
 ]]></db:sql>
 			<db:input-parameters><![CDATA[#[{
-  "title": payload.title,
-  "author": payload.author,
-  "publishedYear": payload.publishedYear,
-  "genre": payload.genre,
-  "isbn": payload.isbn,
-  "pageCount": payload.pageCount,
-  "language": payload.language,
-  "availableCopies": payload.availableCopies
+  "title": vars.inputBookPayload.title,
+  "author": vars.inputBookPayload.author,
+  "publishedYear": vars.inputBookPayload.publishedYear,
+  "genre": vars.inputBookPayload.genre,
+  "isbn": vars.inputBookPayload.isbn,
+  "pageCount": vars.inputBookPayload.pageCount,
+  "language": vars.inputBookPayload.language,
+  "availableCopies": vars.inputBookPayload.availableCopies
 }]]]></db:input-parameters>
 		</db:insert>
 		</until-successful>
