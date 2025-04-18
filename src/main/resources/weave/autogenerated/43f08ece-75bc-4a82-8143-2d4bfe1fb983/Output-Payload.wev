@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_43f08ece_75bc_4a82_8143_2d4bfe1fb983_Output_Payload = Array<{  pageCount: Number,   author: String,   isbn: String,   availableCopies: Number,   genre: "Horror" | "Fantasy" | "Romance" | "Mystery",   language: "English" | "Italian" | "French" | "Chinese" | "Spanish" | "German" | "Japanese" | "Other",   id: Number,   publishedYear: Number,   title: String,   _?: Any}>
+

@@ -173,18 +173,8 @@ removeId(
         <logger level="INFO" doc:name="end" doc:id="cf0fd22d-1d05-495d-9bf6-39c79a27b217" message="#[payload]" />
     </flow>
     <flow name="get:\books:application\json:library-books-sapi-config">
-        <logger level="INFO" doc:name="start" doc:id="e6d67ebd-0183-4798-9486-27782cdfd1d0" message="#[payload]" />
-        <flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="55ed1658-d8bc-49b9-b76c-257b16d23df7" name="global-secured-oauth2-configSub_Flow" />
-        <flow-ref doc:name="clients-get-books" doc:id="625d1e27-da64-4b6e-994f-3dd34f16cb31" name="clients-get-books" />
-        <choice doc:name="validate-book-existence" doc:id="6d5bdbdf-c0d9-46a7-9bf5-1b88be969f21">
-			<when expression="#[isEmpty(payload)]">
-				<raise-error doc:name="book-not-found-error" doc:id="9d39d8f3-773f-4c0b-a6c6-a7b45aa211a9" type="APP:BOOK_NOT_FOUND" description='"Book not found"' />
-			</when>
-			<otherwise>
-				<flow-ref doc:name="orchestrator-get-books" doc:id="9aa51d5c-bda5-438c-9280-f70ce1890d4a" name="orchestrator-get-books" />
-			</otherwise>
-		</choice>
-        <logger level="INFO" doc:name="end" doc:id="d6c7ec31-c792-40ed-ad5d-e965f5989eb7" message="#[payload]" />
+		<flow-ref doc:name="get-all-booksFlow" doc:id="6805b28f-d146-497a-91f0-434dbb65aa35" name="get-all-booksFlow"/>
+        
     </flow>
     <flow name="get:\books\(id):library-books-sapi-config" doc:id="8aaa01eb-9b1a-4b45-b4c3-8d5c01a7fc65">
         <logger level="INFO" doc:name="start" doc:id="b46ecf36-c08f-42cd-8356-9eec3362f33c" message="#[payload]" />
