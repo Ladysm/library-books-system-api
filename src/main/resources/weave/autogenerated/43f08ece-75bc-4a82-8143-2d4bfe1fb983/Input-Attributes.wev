@@ -1,0 +1,26 @@
+%dw 2.0
+
+type auto_43f08ece_75bc_4a82_8143_2d4bfe1fb983_Input_Attributes = {|
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  headers: {| "X-API-Version": String |}, 
+  listenerPath: String, 
+  method: String, 
+  queryParams: {|
+    genre?: String, 
+    publishedYear?: Number
+  |}, 
+  queryString: String, 
+  relativePath: String, 
+  remoteAddress: String, 
+  requestPath: String, 
+  requestUri: String, 
+  scheme: String, 
+  uriParams: {|  |}, 
+  version: String, 
+  localAddress: String
+|}
+
