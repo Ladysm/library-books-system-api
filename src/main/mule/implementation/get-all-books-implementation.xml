@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-all-booksFlow" doc:id="43f08ece-75bc-4a82-8143-2d4bfe1fb983" >
+	<logger level="INFO" doc:name="start" doc:id="153e8094-5a1b-4063-9712-d084251f090b" message="#[payload]" />
+        <flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="421e30a4-f5ba-4745-b82a-8fcac1f6e173" name="global-secured-oauth2-configSub_Flow" />
+        <flow-ref doc:name="db-get-books" doc:id="fce952b1-bf14-4271-869e-7ddae2228528" name="db-get-books" />
+        <choice doc:name="validate-book-existence" doc:id="bac0b98f-ddff-4153-bbdc-f99bf7f40020">
+			<when expression="#[isEmpty(payload)]">
+				<raise-error doc:name="book-not-found-error" doc:id="d40db68c-01d7-4c3a-8087-5b795d65a4ce" type="APP:BOOK_NOT_FOUND" description='"Book not found"' />
+			</when>
+			<otherwise>
+				<ee:transform doc:name="get-books-response-json" doc:id="5f574d40-42be-4dd2-b1c7-0ab8e60f56c5">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			
+</otherwise>
+		</choice>
+        <logger level="INFO" doc:name="end" doc:id="3c23f1d7-bd73-4d1c-975b-437a8a245c98" message="#[payload]" />
+        
+</flow>
+       <flow name="db-get-books" doc:id="12cf1986-807d-43d3-a291-835032252007" >
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="0697747c-6702-4376-b539-a3331ffeaa39" >
+			<db:select doc:name="select-library-books-db" doc:id="a2b14aa4-274b-47d9-8274-f1e96832fb1c" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM movie_catalog.books]]></db:sql>
+		</db:select>
+		</until-successful>
+	</flow>
+</mule>

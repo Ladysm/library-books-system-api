@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="put-book-by-id-implementationFlow" doc:id="d86c0ab7-f5f7-4b70-8dac-85d787739abe" >
+	 <logger level="INFO" doc:name="start" doc:id="3b0461d1-cc7c-46e0-83af-4db1f3d0a57b" message="#[payload]" />
+        <set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="592c8293-5561-410a-a01a-80533ebdaff8" variableName="idBook" />
+        <set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="a0cdc268-e8bd-4626-8118-92fb24e75e6c" variableName="inputBookPayload" />
+        <flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="67ef862f-57ec-4e84-b321-f6fc8efbd392" name="global-secured-oauth2-configSub_Flow" />
+        <flow-ref doc:name="db-get-by-id-books" doc:id="d3c34198-2801-4a55-90a8-0f4e608dd44c" name="db-get-by-id-books" />
+		<choice doc:name="validate-book-existence" doc:id="c46fc755-509b-47d2-a068-1851390b1a3c">
+            <when expression="#[isEmpty(payload)]">
+                <raise-error doc:name="book-not-found-error" doc:id="2cdd7550-8207-4a74-8ad2-3ba815ff9d81" type="APP:BOOK_NOT_FOUND" description="&quot;Book not found&quot;" />
+            </when>
+            <otherwise>
+                <flow-ref doc:name="db-put-by-id-books" doc:id="e8187623-2e1d-488d-9f5a-041b49076cc5" name="db-put-by-id-books" />
+            </otherwise>
+        </choice>
+        <ee:transform doc:name="update-book-success-response-json" doc:id="21189847-0aad-4a23-b5d2-99051a38cb7a">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "The book was updated successfully."
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+        <logger level="INFO" doc:name="end" doc:id="7f1cc42a-457e-4383-a626-6288b2b07735" message="#[payload]" />
+        
+</flow>
+	<flow name="db-put-by-id-books" doc:id="c6398710-805c-482d-8403-3aba328921e1" >
+	<until-successful maxRetries="5" doc:name="Until Successful" doc:id="eaf8ff14-cc99-4b62-9965-7c6a2477af2a" >
+			<db:update doc:name="update-library-books-by-id-db" doc:id="cedef0fe-a725-45f5-8364-181a8b48910d" config-ref="Database_Config">
+			<db:sql><![CDATA[UPDATE movie_catalog.books
+SET title = :title,
+    author = :author,
+    publishedYear = :publishedYear,
+    genre = :genre,
+    isbn = :isbn,
+    pageCount = :pageCount,
+    language = :language,
+    availableCopies = :availableCopies
+WHERE id = :id;
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+      id: vars.idBook ,
+      title: vars.inputBookPayload.title,
+      author: vars.inputBookPayload.author ,
+      publishedYear: vars.inputBookPayload.publishedYear ,
+      genre: vars.inputBookPayload.genre ,
+      isbn: vars.inputBookPayload.isbn ,
+      pageCount: vars.inputBookPayload.pageCount ,
+      language: vars.inputBookPayload.language ,
+      availableCopies: vars.inputBookPayload.availableCopies 
+    }]]]></db:input-parameters>
+		</db:update>
+		</until-successful>
+		</flow>
+</mule>

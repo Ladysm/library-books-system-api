@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-book-by-id-implementationFlow" doc:id="3f86c413-562c-40ad-9e2d-602b517cc074" >
+	<logger level="INFO" doc:name="start" doc:id="69ac6a70-0399-4cfc-baf5-2143683e6d27" message="#[payload]" />
+        <set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="8c26050c-af66-4996-b9e1-ff3cc2a4a1d2" variableName="idBook" />
+		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="72899c30-2a3f-42fa-93c2-56b1d4f58774" name="global-secured-oauth2-configSub_Flow" />
+		<flow-ref doc:name="db-get-by-id-books" doc:id="d25ab855-69a1-4fef-b064-2055125a729a" name="db-get-by-id-books" />
+		<choice doc:name="validate-book-existence" doc:id="cb7e710b-5f58-46d7-a467-7e481846d72f">
+			<when expression="#[isEmpty(payload)]">
+				<raise-error doc:name="book-not-found-error" doc:id="d7e3c5d0-213d-4a9d-9568-a691cc97bb2a" type="APP:BOOK_NOT_FOUND" description="&quot;Book not found&quot;" />
+
+            </when>
+			<otherwise>
+				<ee:transform doc:name="get-book-response-by-id-json" doc:id="ed4250e5-69e7-48eb-8c88-9a748bf5f1db">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+            
+</otherwise>
+
+        </choice>
+        <logger level="INFO" doc:name="end" doc:id="d890603f-ead6-49e6-966f-9bff1461c21e" message="#[payload]" />
+        
+</flow>
+        <flow name="db-get-by-id-books" doc:id="a437e6b8-c3a9-41be-99ec-d794ab1204b5" >
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="47a28869-6556-4621-b19f-efcbad97a55a" >
+			<db:select doc:name="select-library-books-by-id-db" doc:id="a4ac1240-2f0e-48ab-ba1e-2d783e2881d6" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM movie_catalog.books WHERE id= :id]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	"id":vars.idBook
+}]]]></db:input-parameters>
+		</db:select>
+		</until-successful>
+	</flow>
+</mule>
