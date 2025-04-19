@@ -127,9 +127,9 @@ output application/json
         <logger level="INFO" doc:name="start" doc:id="f38f9ba1-c087-4bbd-9550-02d8223289d1" message="#[payload]" />
         <set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="0378b90c-d8b0-4870-a3ee-eb7ffff12e7b" variableName="idBook" />
         <set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="f18a46a5-f2bf-4675-b87a-d2ffbcc08d1c" variableName="inputBookPayload" />
-        <flow-ref doc:name="validate-book-idSub_Flow" doc:id="d252a3a8-013e-434e-8c5f-5ba8e463df34" name="validate-book-idSub_Flow" />
+        <!-- [STUDIO:"validate-book-idSub_Flow"]<flow-ref doc:name="validate-book-idSub_Flow" doc:id="d252a3a8-013e-434e-8c5f-5ba8e463df34" name="validate-book-idSub_Flow" /> [STUDIO] -->
         <flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="cae61227-3e49-4931-8485-8e56cbaa11d9" name="global-secured-oauth2-configSub_Flow" />
-        <flow-ref doc:name="clients-get-by-id-books" doc:id="071e9fbb-2f5a-47f4-8387-aafacf15d295" name="clients-get-by-id-books" />
+        <flow-ref doc:name="clients-get-by-id-books" doc:id="071e9fbb-2f5a-47f4-8387-aafacf15d295" name="db-get-by-id-books" />
 		<choice doc:name="validate-book-existence" doc:id="e56d6023-75d9-45a9-a1e2-61fdc0f9a7e6">
             <when expression="#[isEmpty(payload)]">
                 <raise-error doc:name="book-not-found-error" doc:id="89ce2b35-4d08-4407-b1a9-1a29eae78239" type="APP:BOOK_NOT_FOUND" description="&quot;Book not found&quot;" />
@@ -145,9 +145,9 @@ output application/json
         <logger level="INFO" doc:name="start" doc:id="63d96127-8354-4026-b660-0bc25730fd6a" message="#[payload]" />
         <set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="ce1241b0-4040-42e1-bc5d-a82a5acd69dc" variableName="idBook" />
         <set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="b01715b2-951c-4a3a-8baf-b43738ebd155" variableName="inputBookPayload" />
-        <flow-ref doc:name="validate-book-id-sub-flow" doc:id="00a1518c-47dd-43a9-b05f-e786db37fbab" name="validate-book-idSub_Flow" />
+        <!-- [STUDIO:"validate-book-id-sub-flow"]<flow-ref doc:name="validate-book-id-sub-flow" doc:id="00a1518c-47dd-43a9-b05f-e786db37fbab" name="validate-book-idSub_Flow" /> [STUDIO] -->
         <flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="36d278f8-405e-46cb-b263-358c0e4cb171" name="global-secured-oauth2-configSub_Flow" />
-        <flow-ref doc:name="clients-get-by-id-books" doc:id="eed55cc0-f954-4b61-acd0-d5ef685a7703" name="clients-get-by-id-books" />
+        <flow-ref doc:name="clients-get-by-id-books" doc:id="eed55cc0-f954-4b61-acd0-d5ef685a7703" name="db-get-by-id-books" />
         <choice doc:name="validate-book-existence" doc:id="1a49c89e-61d6-4a1f-9e54-2164f02c112c">
             <when expression="#[isEmpty(payload)]">
                 <raise-error doc:name="book-not-found-error" doc:id="79821b05-c0a5-49e0-b656-63bfe94cf6b8" type="APP:BOOK_NOT_FOUND" description="&quot;Book not found&quot;" />
@@ -177,26 +177,14 @@ removeId(
         
     </flow>
     <flow name="get:\books\(id):library-books-sapi-config" doc:id="8aaa01eb-9b1a-4b45-b4c3-8d5c01a7fc65">
-        <logger level="INFO" doc:name="start" doc:id="b46ecf36-c08f-42cd-8356-9eec3362f33c" message="#[payload]" />
-        <set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="ddb7e056-ed75-49b5-b4d4-b63149719d38" variableName="idBook" />
-        <flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="19bd29ab-5c0b-41d3-8441-3b9eca55caa0" name="global-secured-oauth2-configSub_Flow" />
-        <flow-ref doc:name="validate-book-id-sub-flow" doc:id="32ec0480-09ab-45d3-bb09-4e5a7ebdecaf" name="validate-book-idSub_Flow" />
-        <flow-ref doc:name="clients-get-by-id-books" doc:id="04cf4bb8-ef7c-4a75-8182-d2fe9487c6c2" name="clients-get-by-id-books" />
-        <choice doc:name="validate-book-existence" doc:id="832393b6-a946-480c-9966-73bab552314f">
-            <when expression="#[isEmpty(payload)]">
-                <raise-error doc:name="book-not-found-error" doc:id="afff95bc-4f16-4d1b-8c83-155c4aef6fa4" type="APP:BOOK_NOT_FOUND" description="&quot;Book not found&quot;" />
-            </when>
-            <otherwise>
-                <flow-ref doc:name="orchestrator-get-by-id-books" doc:id="28586f77-6d17-4d39-91f0-1a58a88edf52" name="orchestrator-get-by-id-books" />
-            </otherwise>
-        </choice>
-        <logger level="INFO" doc:name="end" doc:id="d3ca0a8c-a4e1-43f7-acf7-22543fe3b1f7" message="#[payload]" />
+		<flow-ref doc:name="get-book-by-id-implementationFlow" doc:id="ae650151-55fd-4b86-8406-6b0a94702100" name="get-book-by-id-implementationFlow"/>
+        
     </flow>
     <flow name="post:\books:application\json:library-books-sapi-config">
         <logger level="INFO" doc:name="start" doc:id="ae8c58a2-e3bc-4bca-86d1-247bd3e553f7" message="#[payload]" />
 		<set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="bd45703e-15a7-4358-9ddd-3cee8c4aaec8" variableName="inputBookPayload" />
 		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="167a9eea-9317-4fba-a9cd-f25dcb24791b" name="global-secured-oauth2-configSub_Flow" />
-		<flow-ref doc:name="clients-get-by-isbn-booksFlow" doc:id="5b61f4a7-a8e1-4387-91e3-fc6a87a57559" name="clients-get-by-isbn-booksFlow"/>
+		<!-- [STUDIO:"clients-get-by-isbn-booksFlow"]<flow-ref doc:name="clients-get-by-isbn-booksFlow" doc:id="5b61f4a7-a8e1-4387-91e3-fc6a87a57559" name="db-get-by-isbn-booksFlow"/> [STUDIO] -->
 		<choice doc:name="validate-duplicate-isbn" doc:id="30a58051-db19-44f0-a06d-7a411a9ff79a" >
 			<when expression="#[!isEmpty(payload)]">
 				<raise-error doc:name="raise-duplicate-isbn-error" doc:id="ef64465b-938a-47f4-b330-f6da9e27ad9c" type="BOOK:DUPLICATE_ISBN" description="A book with this ISBN already exists"/>
@@ -212,8 +200,8 @@ removeId(
         <logger level="INFO" doc:name="start" doc:id="97be8e8e-9581-405e-a03a-9597d96b4db2" message="#[payload]" />
 		<set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="47eb803c-d4c0-44c8-8aed-78fb76ad4d45" variableName="idBook" />
 		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="d3d17825-c2d2-4ca6-917a-2de69d66e362" name="global-secured-oauth2-configSub_Flow"/>
-		<flow-ref doc:name="validate-book-idSub_Flow" doc:id="06a0817e-d20e-443a-82c1-a2fc9c8c5e43" name="validate-book-idSub_Flow" />
-		<flow-ref doc:name="clients-get-by-id-books" doc:id="32adcfdf-5f2d-4bf9-b6fa-243c1218e85a" name="clients-get-by-id-books"/>
+		<!-- [STUDIO:"validate-book-idSub_Flow"]<flow-ref doc:name="validate-book-idSub_Flow" doc:id="06a0817e-d20e-443a-82c1-a2fc9c8c5e43" name="validate-book-idSub_Flow" /> [STUDIO] -->
+		<flow-ref doc:name="clients-get-by-id-books" doc:id="32adcfdf-5f2d-4bf9-b6fa-243c1218e85a" name="db-get-by-id-books"/>
 		<choice doc:name="validate-book-existence" doc:id="b0157d8d-9582-459d-ba88-9a902fc62e7e" >
 			<when expression="#[isEmpty(payload)]" >
 				<raise-error doc:name="book-not-found-error" doc:id="8b6579e4-4574-4107-a379-1da0e32ef47a" type="APP:BOOK_NOT_FOUND" description='"Book not found"' />

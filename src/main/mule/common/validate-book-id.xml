@@ -4,8 +4,11 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
-	<sub-flow name="validate-book-idSub_Flow" doc:id="1d06c2b4-8fdf-4b5f-ad5c-4a1b14550cd3" >
-		<!-- [STUDIO:"book-id"]<set-variable value="#[attributes.uriParams.id&#93;" doc:name="book-id" doc:id="e38a9ae8-2ce7-4f94-8d1a-8b14b15a1c84" variableName="bookId"/> [STUDIO] -->
-		<validation:is-number numberType="INTEGER" doc:name="Is number" doc:id="691aae53-a20f-4b96-830d-d17c31b6f3f3" config-ref="Validation_Config" value="#[vars.idBook]"/>
-	</sub-flow>
+	<!-- [STUDIO:"validate-book-idSub_Flow"]<sub-flow name="validate-book-idSub_Flow" doc:id="1d06c2b4-8fdf-4b5f-ad5c-4a1b14550cd3" >
+		<set-variable value="#[attributes.uriParams.id&#93;" doc:name="book-id" doc:id="e38a9ae8-2ce7-4f94-8d1a-8b14b15a1c84" variableName="bookId"/>
+		<validation:is-number numberType="INTEGER" doc:name="Is number" doc:id="691aae53-a20f-4b96-830d-d17c31b6f3f3" config-ref="Validation_Config" value="#[vars.idBook&#93;"/>
+	</sub-flow> [STUDIO] -->
+	<flow name="validate-book-idFlow" doc:id="30c50e23-d200-4963-93c6-a073eea22046" >
+		<logger level="INFO" doc:name="Logger" doc:id="176a6117-a9fb-42d5-bbdf-e55de26c5813" />
+	</flow>
 </mule>
