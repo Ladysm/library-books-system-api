@@ -144,20 +144,7 @@ output application/json
         
     </flow>
     <flow name="delete:\books\(id):library-books-sapi-config" doc:id="34bce463-e2d2-4cc7-8d30-1ff6fac376c6">
-        <logger level="INFO" doc:name="start" doc:id="97be8e8e-9581-405e-a03a-9597d96b4db2" message="#[payload]" />
-		<set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="47eb803c-d4c0-44c8-8aed-78fb76ad4d45" variableName="idBook" />
-		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="d3d17825-c2d2-4ca6-917a-2de69d66e362" name="global-secured-oauth2-configSub_Flow"/>
-		<!-- [STUDIO:"validate-book-idSub_Flow"]<flow-ref doc:name="validate-book-idSub_Flow" doc:id="06a0817e-d20e-443a-82c1-a2fc9c8c5e43" name="validate-book-idSub_Flow" /> [STUDIO] -->
-		<flow-ref doc:name="clients-get-by-id-books" doc:id="32adcfdf-5f2d-4bf9-b6fa-243c1218e85a" name="db-get-by-id-books"/>
-		<choice doc:name="validate-book-existence" doc:id="b0157d8d-9582-459d-ba88-9a902fc62e7e" >
-			<when expression="#[isEmpty(payload)]" >
-				<raise-error doc:name="book-not-found-error" doc:id="8b6579e4-4574-4107-a379-1da0e32ef47a" type="APP:BOOK_NOT_FOUND" description='"Book not found"' />
-			</when>
-			<otherwise>
-				<flow-ref doc:name="clients-delete-by-id-books" doc:id="8130bda9-fc93-4096-81e1-fa8604a6a6c1" name="clients-delete-by-id-books" />
-			</otherwise>
-		</choice>
-		<flow-ref doc:name="orchestrator-delete-by-id-books" doc:id="af59e400-6f55-432a-aaa3-7dd12e10efca" name="orchestrator-delete-by-id-books"/>
-		<logger level="INFO" doc:name="end" doc:id="507f84db-02e3-49d8-9c2d-c31928d671d4" message="#[payload]" />
+		<flow-ref doc:name="delete-book-by-id-implementationFlow" doc:id="4a02bc2a-989a-45bd-b2f0-d0dbe8f44d84" name="delete-book-by-id-implementationFlow"/>
+        
     </flow>
 </mule>

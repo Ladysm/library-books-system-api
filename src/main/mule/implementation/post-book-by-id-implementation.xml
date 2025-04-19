@@ -28,8 +28,9 @@ output application/json
         <logger level="INFO" doc:name="end" doc:id="de9c0ba1-de0e-4cb9-8851-6b0e2f44fcc9" message="#[payload]" />
         
 </flow>
-        <flow name="db-post-books" doc:id="090eab48-ffb8-4f22-b6ba-ef7a4a18d6da" >
-		<db:insert doc:name="insert-library-book-db" doc:id="51f4cceb-56fb-4ec2-84f6-dba5fc498500" config-ref="Database_Config">
+	<flow name="db-post-books" doc:id="090eab48-ffb8-4f22-b6ba-ef7a4a18d6da" >
+		<try doc:name="Try" doc:id="ed9a9d6c-68c1-46d5-b9fa-254eaad87f6f" >
+			<db:insert doc:name="insert-library-book-db" doc:id="51f4cceb-56fb-4ec2-84f6-dba5fc498500" config-ref="Database_Config">
 			<db:sql><![CDATA[INSERT INTO movie_catalog.books 
 (title, author, publishedYear, genre, isbn, pageCount, language, availableCopies)
 VALUES 
@@ -46,11 +47,12 @@ VALUES
   "availableCopies": vars.inputBookPayload.availableCopies
 }]]]></db:input-parameters>
 		</db:insert>
-		<error-handler >
-			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="22b6cb36-ef8f-405c-9f5d-3a56aa8f6df0" type="DB:QUERY_EXECUTION">
-				<raise-error doc:name="BOOK:DUPLICATE_ISBN" doc:id="70d505a3-f22c-44ed-9d27-0f1d99e172bd" type="BOOK:DUPLICATE_ISBN"/>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="22b6cb36-ef8f-405c-9f5d-3a56aa8f6df0" type="DB:QUERY_EXECUTION">
+				<raise-error doc:name="BOOK:DUPLICATE_ISBN" doc:id="70d505a3-f22c-44ed-9d27-0f1d99e172bd" type="BOOK:DUPLICATE_ISBN" />
 			</on-error-propagate>
-		</error-handler>
+			</error-handler>
+		</try>
 	
 </flow>
 </mule>
