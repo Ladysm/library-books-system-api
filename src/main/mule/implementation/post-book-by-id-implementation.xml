@@ -11,16 +11,9 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="09b719a3-f575-4b43-b936-958af80956d9" variableName="inputBookPayload" />
 		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="7c80c873-b1ba-4ecb-a77a-e3d61cb890db" name="global-secured-oauth2-configSub_Flow" />
 		<flow-ref doc:name="db-get-by-id-books" doc:id="9c4e44af-929e-4e96-83d6-a37b7250fb57" name="db-get-by-id-books"/>
-		<logger level="INFO" doc:name="Logger" doc:id="f76e9758-215c-442a-b29d-cce7acd8aa20" message="#[payload[0].isbn] - Input ISBN: #[vars.inputBookPayload.isbn]"/>
-		<choice doc:name="validate-duplicate-isbn" doc:id="5363caa6-7f8c-4a99-8420-609159f3809d" >
-			<when expression="#[(payload[0].isbn as String) == (vars.inputBookPayload.isbn as String)]">
-				<raise-error doc:name="raise-duplicate-isbn-error" doc:id="2057a933-3c99-479f-b25a-9dff012cf9e9" type="BOOK:DUPLICATE_ISBN" description="A book with this ISBN already exists"/>
-			</when>
-			<otherwise >
-				<flow-ref doc:name="db-post-books" doc:id="350e6219-c0ef-4a5d-8e6e-2cfae9426fa8" name="db-post-books" />
-			</otherwise>
 		
-</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="f76e9758-215c-442a-b29d-cce7acd8aa20" message="#[payload[0].isbn] - Input ISBN: #[vars.inputBookPayload.isbn]"/>
+		<flow-ref doc:name="db-post-books" doc:id="350e6219-c0ef-4a5d-8e6e-2cfae9426fa8" name="db-post-books" />
 		<ee:transform doc:name="create-book-success-response-json" doc:id="2396562e-9cbb-49d0-bb8d-1e3c5e289e1c">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
@@ -36,8 +29,7 @@ output application/json
         
 </flow>
         <flow name="db-post-books" doc:id="090eab48-ffb8-4f22-b6ba-ef7a4a18d6da" >
-		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="104ddd7e-3635-410b-a04f-9bc25be181d4" >
-			<db:insert doc:name="insert-library-book-db" doc:id="51f4cceb-56fb-4ec2-84f6-dba5fc498500" config-ref="Database_Config">
+		<db:insert doc:name="insert-library-book-db" doc:id="51f4cceb-56fb-4ec2-84f6-dba5fc498500" config-ref="Database_Config">
 			<db:sql><![CDATA[INSERT INTO movie_catalog.books 
 (title, author, publishedYear, genre, isbn, pageCount, language, availableCopies)
 VALUES 
@@ -54,6 +46,11 @@ VALUES
   "availableCopies": vars.inputBookPayload.availableCopies
 }]]]></db:input-parameters>
 		</db:insert>
-		</until-successful>
-	</flow>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="22b6cb36-ef8f-405c-9f5d-3a56aa8f6df0" type="DB:QUERY_EXECUTION">
+				<raise-error doc:name="BOOK:DUPLICATE_ISBN" doc:id="70d505a3-f22c-44ed-9d27-0f1d99e172bd" type="BOOK:DUPLICATE_ISBN"/>
+			</on-error-propagate>
+		</error-handler>
+	
+</flow>
 </mule>
