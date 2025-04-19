@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_d86c0ab7_f5f7_4b70_8dac_85d787739abe_Output_Variables_inputBookPayload = Any
+

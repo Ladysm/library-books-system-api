@@ -124,22 +124,8 @@ output application/json
         </error-handler>
     </flow>
     <flow name="put:\books\(id):application\json:library-books-sapi-config">
-        <logger level="INFO" doc:name="start" doc:id="f38f9ba1-c087-4bbd-9550-02d8223289d1" message="#[payload]" />
-        <set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="0378b90c-d8b0-4870-a3ee-eb7ffff12e7b" variableName="idBook" />
-        <set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="f18a46a5-f2bf-4675-b87a-d2ffbcc08d1c" variableName="inputBookPayload" />
-        <!-- [STUDIO:"validate-book-idSub_Flow"]<flow-ref doc:name="validate-book-idSub_Flow" doc:id="d252a3a8-013e-434e-8c5f-5ba8e463df34" name="validate-book-idSub_Flow" /> [STUDIO] -->
-        <flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="cae61227-3e49-4931-8485-8e56cbaa11d9" name="global-secured-oauth2-configSub_Flow" />
-        <flow-ref doc:name="clients-get-by-id-books" doc:id="071e9fbb-2f5a-47f4-8387-aafacf15d295" name="db-get-by-id-books" />
-		<choice doc:name="validate-book-existence" doc:id="e56d6023-75d9-45a9-a1e2-61fdc0f9a7e6">
-            <when expression="#[isEmpty(payload)]">
-                <raise-error doc:name="book-not-found-error" doc:id="89ce2b35-4d08-4407-b1a9-1a29eae78239" type="APP:BOOK_NOT_FOUND" description="&quot;Book not found&quot;" />
-            </when>
-            <otherwise>
-                <flow-ref doc:name="clients-put-by-id-books" doc:id="09ae4a9e-d769-4316-b363-f1750dd63618" name="clients-put-by-id-books" />
-            </otherwise>
-        </choice>
-        <flow-ref doc:name="orchestrator-put-by-id-books" doc:id="96c6609e-19f2-469b-8124-b91157329bf8" name="orchestrator-put-by-id-books" />
-        <logger level="INFO" doc:name="end" doc:id="aa1c5b08-3804-4b79-84c1-9db70b924db4" message="#[payload]" />
+		<flow-ref doc:name="put-book-by-id-implementationFlow" doc:id="2ff69702-98d7-4a1a-b11b-be78fb655e14" name="put-book-by-id-implementationFlow"/>
+       
     </flow>
     <flow name="patch:\books\(id):application\json:library-books-sapi-config">
         <logger level="INFO" doc:name="start" doc:id="63d96127-8354-4026-b660-0bc25730fd6a" message="#[payload]" />
