@@ -140,20 +140,8 @@ output application/json
         
     </flow>
     <flow name="post:\books:application\json:library-books-sapi-config">
-        <logger level="INFO" doc:name="start" doc:id="ae8c58a2-e3bc-4bca-86d1-247bd3e553f7" message="#[payload]" />
-		<set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="bd45703e-15a7-4358-9ddd-3cee8c4aaec8" variableName="inputBookPayload" />
-		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="167a9eea-9317-4fba-a9cd-f25dcb24791b" name="global-secured-oauth2-configSub_Flow" />
-		<!-- [STUDIO:"clients-get-by-isbn-booksFlow"]<flow-ref doc:name="clients-get-by-isbn-booksFlow" doc:id="5b61f4a7-a8e1-4387-91e3-fc6a87a57559" name="db-get-by-isbn-booksFlow"/> [STUDIO] -->
-		<choice doc:name="validate-duplicate-isbn" doc:id="30a58051-db19-44f0-a06d-7a411a9ff79a" >
-			<when expression="#[!isEmpty(payload)]">
-				<raise-error doc:name="raise-duplicate-isbn-error" doc:id="ef64465b-938a-47f4-b330-f6da9e27ad9c" type="BOOK:DUPLICATE_ISBN" description="A book with this ISBN already exists"/>
-			</when>
-			<otherwise >
-				<flow-ref doc:name="clients-post-books" doc:id="7e121f2d-9cd2-429c-91bd-370beef0da48" name="clients-post-books" />
-			</otherwise>
-		</choice>
-        <flow-ref doc:name="orchestrator-post-by-id-books" doc:id="ff294e76-2107-4eb0-b95f-f6abca3ccfd9" name="orchestrator-post-by-id-books" />
-        <logger level="INFO" doc:name="end" doc:id="b3b56d11-460e-4568-866e-d201ead23ec3" message="#[payload]" />
+		<flow-ref doc:name="post-book-by-id-implementationFlow" doc:id="6bf4af29-e5c4-489a-a744-be81419f4f91" name="post-book-by-id-implementationFlow"/>
+        
     </flow>
     <flow name="delete:\books\(id):library-books-sapi-config" doc:id="34bce463-e2d2-4cc7-8d30-1ff6fac376c6">
         <logger level="INFO" doc:name="start" doc:id="97be8e8e-9581-405e-a03a-9597d96b4db2" message="#[payload]" />

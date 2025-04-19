@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="post-book-by-id-implementationFlow" doc:id="a05b7798-6413-4438-acaf-0a3a3de29a0d" >
+	<logger level="INFO" doc:name="start" doc:id="e0869395-860a-41c4-8d52-a80165989d4d" message="#[payload]" />
+		<set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="09b719a3-f575-4b43-b936-958af80956d9" variableName="inputBookPayload" />
+		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="7c80c873-b1ba-4ecb-a77a-e3d61cb890db" name="global-secured-oauth2-configSub_Flow" />
+		<flow-ref doc:name="db-get-by-id-books" doc:id="9c4e44af-929e-4e96-83d6-a37b7250fb57" name="db-get-by-id-books"/>
+		<logger level="INFO" doc:name="Logger" doc:id="f76e9758-215c-442a-b29d-cce7acd8aa20" message="#[payload[0].isbn] - Input ISBN: #[vars.inputBookPayload.isbn]"/>
+		<choice doc:name="validate-duplicate-isbn" doc:id="5363caa6-7f8c-4a99-8420-609159f3809d" >
+			<when expression="#[(payload[0].isbn as String) == (vars.inputBookPayload.isbn as String)]">
+				<raise-error doc:name="raise-duplicate-isbn-error" doc:id="2057a933-3c99-479f-b25a-9dff012cf9e9" type="BOOK:DUPLICATE_ISBN" description="A book with this ISBN already exists"/>
+			</when>
+			<otherwise >
+				<flow-ref doc:name="db-post-books" doc:id="350e6219-c0ef-4a5d-8e6e-2cfae9426fa8" name="db-post-books" />
+			</otherwise>
+		
+</choice>
+		<ee:transform doc:name="create-book-success-response-json" doc:id="2396562e-9cbb-49d0-bb8d-1e3c5e289e1c">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "book was created succesfully"
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+        <logger level="INFO" doc:name="end" doc:id="de9c0ba1-de0e-4cb9-8851-6b0e2f44fcc9" message="#[payload]" />
+        
+</flow>
+        <flow name="db-post-books" doc:id="090eab48-ffb8-4f22-b6ba-ef7a4a18d6da" >
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="104ddd7e-3635-410b-a04f-9bc25be181d4" >
+			<db:insert doc:name="insert-library-book-db" doc:id="51f4cceb-56fb-4ec2-84f6-dba5fc498500" config-ref="Database_Config">
+			<db:sql><![CDATA[INSERT INTO movie_catalog.books 
+(title, author, publishedYear, genre, isbn, pageCount, language, availableCopies)
+VALUES 
+(:title, :author, :publishedYear, :genre, :isbn, :pageCount, :language, :availableCopies);
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+  "title": vars.inputBookPayload.title,
+  "author": vars.inputBookPayload.author,
+  "publishedYear": vars.inputBookPayload.publishedYear,
+  "genre": vars.inputBookPayload.genre,
+  "isbn": vars.inputBookPayload.isbn,
+  "pageCount": vars.inputBookPayload.pageCount,
+  "language": vars.inputBookPayload.language,
+  "availableCopies": vars.inputBookPayload.availableCopies
+}]]]></db:input-parameters>
+		</db:insert>
+		</until-successful>
+	</flow>
+</mule>

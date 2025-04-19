@@ -32,11 +32,11 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			<set-variable value='#["400"]' doc:name="set-http-status-400" doc:id="99381808-1ea2-4af8-82d9-845abcd7c7c9" variableName="httpStatus" />
 			<set-payload value="#[output application/json&#10;---&#10;{&#10;   error: &quot;Invalid parameter&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;},&#10; &#10;}]" doc:name="set-retry-exhausted-error" doc:id="d21a720b-1851-4e13-9ac2-ca2db3224419" />
 		</on-error-propagate>
-		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c78a1f66-cb54-4905-9893-1d6ec0cbc6ac" type="BOOK:DUPLICATE_ISBN">
-			<logger level="ERROR" doc:name="log-duplicate-isbn-error" doc:id="8ef4f53b-13ad-402b-bb87-28c19409ce7d" message="#[error.description]" />
-			<set-payload value="#[output application/json&#10;---&#10;{&#10;  error: &quot;Duplicate ISBN&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;}&#10;}]" doc:name="set-duplicate-isbn-error" doc:id="8b9ddcca-aefb-44f8-99e2-ba58f5cc9918" />
-			<set-variable value='#["409"]' doc:name="set-http-status-409" doc:id="fe120b00-f36f-4872-9730-c5c3d145470f" variableName="httpStatus" />
-		</on-error-propagate>
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c78a1f66-cb54-4905-9893-1d6ec0cbc6ac" type="BOOK:DUPLICATE_ISBN">
+			<logger level="ERROR" doc:name="log-duplicate-isbn-error" doc:id="8ef4f53b-13ad-402b-bb87-28c19409ce7d" message="#[error.description&#93;" />
+			<set-payload value="#[output application/json&#10;&#45;&#45;-&#10;{&#10;  error: &quot;Duplicate ISBN&quot;,&#10;  description: error.description,&#10;  timestamp: now() as String {format: &quot;yyyy-MM-dd'T'HH:mm:ssZ&quot;}&#10;}&#93;" doc:name="set-duplicate-isbn-error" doc:id="8b9ddcca-aefb-44f8-99e2-ba58f5cc9918" />
+			<set-variable value='#["409"&#93;' doc:name="set-http-status-409" doc:id="fe120b00-f36f-4872-9730-c5c3d145470f" variableName="httpStatus" />
+		</on-error-propagate> [STUDIO] -->
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="285788ae-3251-42c1-8d39-8829c5a40c3e" type="ANY" >
 			<logger level="ERROR" doc:name="log-retry-exhausted-error" doc:id="155afb51-f793-4fe3-ba02-d2a26acc1263" message="#[error.description]" />
 			<set-variable value='#["500"]' doc:name="set-http-status-50" doc:id="27163363-7ee9-4a23-b691-6b5ea59e776b" variableName="httpStatus" />

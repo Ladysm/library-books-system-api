@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_a437e6b8_c3a9_41be_99ec_d794ab1204b5_Input_Variables_outboundHeaders = {| "x-api-version"*: String |}
+
