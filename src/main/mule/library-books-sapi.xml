@@ -140,11 +140,11 @@ output application/json
         
     </flow>
     <flow name="post:\books:application\json:library-books-sapi-config">
-		<flow-ref doc:name="post-book-by-id-implementationFlow" doc:id="6bf4af29-e5c4-489a-a744-be81419f4f91" name="post-book-by-id-implementationFlow"/>
+		<flow-ref doc:name="post-book-by-id-implementationFlow" doc:id="e745d6d0-d4d8-4f14-9886-00e76f1da339" name="post-book-by-id-implementationFlow"/>
         
     </flow>
     <flow name="delete:\books\(id):library-books-sapi-config" doc:id="34bce463-e2d2-4cc7-8d30-1ff6fac376c6">
-		<flow-ref doc:name="delete-book-by-id-implementationFlow" doc:id="4a02bc2a-989a-45bd-b2f0-d0dbe8f44d84" name="delete-book-by-id-implementationFlow"/>
+		<flow-ref doc:name="delete-book-by-id-implementationFlow" doc:id="af110de5-f754-438c-9418-a2943efb8db9" name="delete-book-by-id-implementationFlow"/>
         
     </flow>
 </mule>

@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	<logger level="INFO" doc:name="start" doc:id="5b34391c-400f-409e-a84c-859980278d12" message="#[payload]" />
 		<set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="ab3b9255-802b-42d0-b6d9-58090e20d8f0" variableName="idBook" />
 		<flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="23e989e0-e0c3-4b4d-9f86-910ad85b971f" name="global-secured-oauth2-configSub_Flow"/>
-		<flow-ref doc:name="db-get-by-id-books" doc:id="d842d1da-743f-49ec-b44b-4328eeca24f3" name="db-get-by-id-books"/>
+		<flow-ref doc:name="clients-get-by-id-books" doc:id="d842d1da-743f-49ec-b44b-4328eeca24f3" name="db-get-by-id-books"/>
 		<choice doc:name="validate-book-existence" doc:id="581951f4-36e9-473f-8cb5-2274fb2a14f3" >
 			<when expression="#[isEmpty(payload)]" >
 				<raise-error doc:name="book-not-found-error" doc:id="68292849-a4ae-46c5-b105-65298f6ac864" type="APP:BOOK_NOT_FOUND" description='"Book not found"' />
@@ -19,22 +19,19 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<flow-ref doc:name="db-delete-by-id-books" doc:id="6b864a6e-bc3b-488e-9f83-997465d93cb7" name="db-delete-by-id-books" />
 			</otherwise>
 		</choice>
-		<ee:transform doc:name="delete-book-success-response-json" doc:id="a55025d1-0378-4f47-89ab-1bd41fb7e179">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
+		<ee:transform doc:name="Transform Message" doc:id="391e0d78-9ac9-45ab-a43c-8b65f438190e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-{
-  message: "The book was deleted successfully."
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+{ "message": "book was deleted succesfully"
+}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="end" doc:id="d08953ba-030f-4f06-bb84-496509124de9" message="#[payload]" />
-		
-</flow>
+		</flow>
 		<flow name="db-delete-by-id-books" doc:id="cc06fa0a-9f1f-445a-a01f-85e4db5ff9f9" >
-		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="998eacc4-085b-4b16-8c3b-daeed76b2b6d" >
-			<db:delete doc:name="delete-library-books-by-id-db" doc:id="84003635-f63c-4ad7-85df-8bde1bf5eaf4" config-ref="Database_Config">
+		<db:delete doc:name="delete-library-books-by-id-db" doc:id="84003635-f63c-4ad7-85df-8bde1bf5eaf4" config-ref="Database_Config">
 			<db:sql><![CDATA[DELETE FROM movie_catalog.books WHERE id = :id;
 ]]></db:sql>
 			<db:input-parameters><![CDATA[#[{
@@ -42,6 +39,5 @@ output application/json
 	
 }]]]></db:input-parameters>
 		</db:delete>
-		</until-successful>
 	</flow>
 </mule>
