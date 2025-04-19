@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="patch-book-by-id-implementationFlow" doc:id="549a6c7f-aa39-498e-b49b-cbd1b6f6fef5" >
+	<logger level="INFO" doc:name="start" doc:id="1716d4ea-d3fa-4722-94a0-dc982fd1ffa0" message="#[payload]" />
+        <set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="a3788a3a-4819-43eb-89b5-be8c1d5afb89" variableName="idBook" />
+        <set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="d2bcbfef-4d16-4008-9c48-b867721672b6" variableName="inputBookPayload" />
+        <flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="1be1d340-7cec-4eb3-9683-6df47adc4a54" name="global-secured-oauth2-configSub_Flow" />
+        <flow-ref doc:name="db-get-by-id-books" doc:id="8d8f2ce9-524e-4622-97fc-e66f4195cf31" name="db-get-by-id-books" />
+        <choice doc:name="validate-book-existence" doc:id="2fd3fa98-849b-4608-95bf-2fb8f4abaa9d">
+            <when expression="#[isEmpty(payload)]">
+                <raise-error doc:name="book-not-found-error" doc:id="e16fee4a-2999-44cb-8d74-66fc85c1e948" type="APP:BOOK_NOT_FOUND" description="&quot;Book not found&quot;" />
+            </when>
+            <otherwise>
+                <set-variable value="#[payload]" doc:name="currentBookData" doc:id="7f184c76-70ca-4b96-8859-c7b167a27dfa" variableName="currentBookData" />
+            </otherwise>
+        </choice>
+        <logger level="INFO" doc:name="payload-select-operation" doc:id="eb246a43-7853-4172-b6d9-0baba6423e28" message="#[vars.inputBookPayload[0]]" />
+        <ee:transform doc:name="merge-book-for-update" doc:id="e2164315-4048-4b1b-a309-bd75629df671">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+import * from dw::bookUtils
+---
+removeId(
+  mergeBookUpdates(vars.currentBookData[0], vars.inputBookPayload)
+)]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <flow-ref doc:name="db-patch-by-id-books" doc:id="29e35ef9-a3ce-4303-81f1-44b388db64fe" name="db-patch-by-id-books" />
+        <ee:transform doc:name="patch-book-success-response-json" doc:id="0de37b4f-362a-4543-80c4-b2396d3ef90b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "The book was updated successfully."
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="end" doc:id="b2822d7a-c763-45cf-82d9-5259a7a9d150" message="#[payload]" />
+        
+</flow>
+        <flow name="db-patch-by-id-books" doc:id="b63e88d7-b49a-46e1-b909-32fdd6cc287e" >
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="c657fe55-66fa-4edf-8a7e-9b093080a4b5" >
+			<db:update doc:name="update-library-books-by-id-db" doc:id="82fe87ac-6b6a-4e33-a916-a0a38c496a2d" config-ref="Database_Config">
+			<db:sql><![CDATA[UPDATE movie_catalog.books
+SET title = :title,
+    author = :author,
+    publishedYear = :publishedYear,
+    genre = :genre,
+    isbn = :isbn,
+    pageCount = :pageCount,
+    language = :language,
+    availableCopies = :availableCopies
+WHERE id = :id;
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+  "id": vars.idBook,
+  "title": payload.title,
+  "author": payload.author,
+  "publishedYear": payload.publishedYear,
+  "genre": payload.genre,
+  "isbn": payload.isbn,
+  "pageCount": payload.pageCount,
+  "language": payload.language,
+  "availableCopies": payload.availableCopies
+}]]]></db:input-parameters>
+		</db:update>
+		</until-successful>
+	</flow>
+</mule>

@@ -1,0 +1,14 @@
+%dw 2.0
+
+type auto_549a6c7f_aa39_498e_b49b_cbd1b6f6fef5_Input_Payload = {
+  pageCount?: Number, 
+  author?: String, 
+  isbn?: String, 
+  availableCopies?: Number, 
+  genre?: "Horror" | "Fantasy" | "Romance" | "Mystery", 
+  language?: "English" | "Italian" | "French" | "Chinese" | "Spanish" | "German" | "Japanese" | "Other", 
+  publishedYear?: Number, 
+  title?: String, 
+  _?: Any
+}
+

@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
         <set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="592c8293-5561-410a-a01a-80533ebdaff8" variableName="idBook" />
         <set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="a0cdc268-e8bd-4626-8118-92fb24e75e6c" variableName="inputBookPayload" />
         <flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="67ef862f-57ec-4e84-b321-f6fc8efbd392" name="global-secured-oauth2-configSub_Flow" />
-        <flow-ref doc:name="clients-get-by-id-books" doc:id="d3c34198-2801-4a55-90a8-0f4e608dd44c" name="db-get-by-id-books" />
+        <flow-ref doc:name="db-get-by-id-books" doc:id="d3c34198-2801-4a55-90a8-0f4e608dd44c" name="db-get-by-id-books" />
 		<choice doc:name="validate-book-existence" doc:id="c46fc755-509b-47d2-a068-1851390b1a3c">
             <when expression="#[isEmpty(payload)]">
                 <raise-error doc:name="book-not-found-error" doc:id="2cdd7550-8207-4a74-8ad2-3ba815ff9d81" type="APP:BOOK_NOT_FOUND" description="&quot;Book not found&quot;" />

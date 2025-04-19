@@ -128,35 +128,8 @@ output application/json
        
     </flow>
     <flow name="patch:\books\(id):application\json:library-books-sapi-config">
-        <logger level="INFO" doc:name="start" doc:id="63d96127-8354-4026-b660-0bc25730fd6a" message="#[payload]" />
-        <set-variable value="#[attributes.uriParams.id]" doc:name="idBook" doc:id="ce1241b0-4040-42e1-bc5d-a82a5acd69dc" variableName="idBook" />
-        <set-variable value="#[payload]" doc:name="inputBookPayload" doc:id="b01715b2-951c-4a3a-8baf-b43738ebd155" variableName="inputBookPayload" />
-        <!-- [STUDIO:"validate-book-id-sub-flow"]<flow-ref doc:name="validate-book-id-sub-flow" doc:id="00a1518c-47dd-43a9-b05f-e786db37fbab" name="validate-book-idSub_Flow" /> [STUDIO] -->
-        <flow-ref doc:name="global-secured-oauth2-configSub_Flow" doc:id="36d278f8-405e-46cb-b263-358c0e4cb171" name="global-secured-oauth2-configSub_Flow" />
-        <flow-ref doc:name="clients-get-by-id-books" doc:id="eed55cc0-f954-4b61-acd0-d5ef685a7703" name="db-get-by-id-books" />
-        <choice doc:name="validate-book-existence" doc:id="1a49c89e-61d6-4a1f-9e54-2164f02c112c">
-            <when expression="#[isEmpty(payload)]">
-                <raise-error doc:name="book-not-found-error" doc:id="79821b05-c0a5-49e0-b656-63bfe94cf6b8" type="APP:BOOK_NOT_FOUND" description="&quot;Book not found&quot;" />
-            </when>
-            <otherwise>
-                <set-variable value="#[payload]" doc:name="currentBookData" doc:id="56a84f50-3d3d-453a-81a9-845e9fae10ff" variableName="currentBookData" />
-            </otherwise>
-        </choice>
-        <logger level="INFO" doc:name="payload-select-operation" doc:id="4e857f8b-9217-40f2-b636-67977a1c1e0a" message="#[vars.inputBookPayload[0]]" />
-        <ee:transform doc:name="merge-book-for-update" doc:id="4053ae66-b6a4-46af-8e45-674062394654">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
-import * from dw::bookUtils
----
-removeId(
-  mergeBookUpdates(vars.currentBookData[0], vars.inputBookPayload)
-)]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
-        <flow-ref doc:name="clients-patch-by-id-books" doc:id="95132d34-edd5-43ad-8656-f0bbad1ad5ff" name="clients-patch-by-id-books" />
-        <flow-ref doc:name="orchestrator-patch-by-id-books" doc:id="855f3d1b-0249-4d7d-af5f-29d632356a5c" name="orchestrator-patch-by-id-books" />
-        <logger level="INFO" doc:name="end" doc:id="cf0fd22d-1d05-495d-9bf6-39c79a27b217" message="#[payload]" />
+		<flow-ref doc:name="patch-book-by-id-implementationFlow" doc:id="592547f0-ccba-4f94-a68d-b70f46fbef69" name="patch-book-by-id-implementationFlow"/>
+        
     </flow>
     <flow name="get:\books:application\json:library-books-sapi-config">
 		<flow-ref doc:name="get-all-booksFlow" doc:id="6805b28f-d146-497a-91f0-434dbb65aa35" name="get-all-booksFlow"/>
