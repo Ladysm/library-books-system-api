@@ -8,7 +8,7 @@
 		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
 		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
 	<munit:config name="new-test-suite.xml" />
-	<munit:test name="new-test-suite-global-secured-oauth2-configSub_FlowTest" doc:id="4c35bd63-1437-4e37-810b-c785b864d5ae" description="Test">
+	<munit:test name="new-test-suite-global-secured-oauth2-configSub_FlowTest" doc:id="4c35bd63-1437-4e37-810b-c785b864d5ae" description="Test" ignore="false">
 		<munit:behavior >
 			<set-variable value="#['mocked-token-123']" doc:name="accessToken" doc:id="0813f55e-b816-437b-916e-f2339fb2d026" variableName="accessToken"/>
 <munit-tools:mock-when doc:name="Mock HTTP Validate OAuth Token Request" processor="http:request">
@@ -16,7 +16,7 @@
 					<munit-tools:with-attribute whereValue="Validate OAuth Token Request" attributeName="doc:name" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
-					<munit-tools:payload value="#[{ &#10;		'expires_in': 86384, &#10;        'scope': '', &#10;        'client_id': 'dummy-client-id' &#10;		}]" mediaType="application/json" />
+					<munit-tools:payload value="#[{ &#10;		'expires_in': 86384, &#10;        'scope': '', &#10;        'client_id': 'dummy-client-id' &#10;		}]" mediaType="application/java" />
 				</munit-tools:then-return>
 
 </munit-tools:mock-when>		</munit:behavior>
@@ -24,7 +24,20 @@
 			<flow-ref doc:name="Flow-ref to global-secured-oauth2-configSub_Flow" doc:id="7da5e625-4f76-40a5-8b57-2d3eb0fff74a" name="global-secured-oauth2-configSub_Flow"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert-that doc:name="expires_in" doc:id="19e1d9c8-bedc-4ff3-8760-933b33cbb99f" expression="#[%dw 2.0&#10;import hasKey from MunitTools&#10;---&#10;payload]" is="#[%dw 2.0&#10;import hasKey from MunitTools&#10;---&#10;MunitTools::hasKey(MunitTools::equalTo('expires_in'))]"/>
+			<munit-tools:assert doc:name="Assert expression" doc:id="382be579-b629-4b69-8a57-a6980eca2b87" >
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+
+
+import * from dw::test::Asserts 
+
+ ---
+must(payload , [
+  haveKey("expires_in"),
+  haveKey("client_id"),
+  haveKey("scope")
+])]]]></munit-tools:that>
+			</munit-tools:assert>
+			<!-- [STUDIO:"expires_in"]<munit-tools:assert-that doc:name="expires_in" doc:id="19e1d9c8-bedc-4ff3-8760-933b33cbb99f" expression="#[%dw 2.0&#10;import hasKey from MunitTools&#10;&#45;&#45;-&#10;payload&#93;" is="#[%dw 2.0&#10;import hasKey from MunitTools&#10;var requiredKeys = ['expires_in', 'client_id', 'scope'&#93;&#10;&#45;&#45;-&#10;MunitTools::hasKey(MunitTools::equalTo('expires_in'))&#93;"/> [STUDIO] -->
 		</munit:validation>
 	</munit:test>
 
