@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="get-all-books-implementation-suite.xml" />
+	
+	<munit:test name="get-all-books-implementation-suite-get-all-booksFlowTest" doc:id="08a4739d-444d-41e0-b082-1b816cf28389" description="Test"  ignore="true">
+	
+		<munit:behavior >
+			<set-variable value="#['Bearer 0B8nTk5A92Qt']" doc:name="accessToken" doc:id="9e790f38-cb1c-49e5-b2f3-5b2dc5f8d085" variableName="accessToken"/>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get-all-booksFlow" doc:id="416b3e57-c37c-4938-9249-b81928ff0f66" name="get-all-booksFlow"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="get-all-books-implementation-suite-db-get-booksTest" doc:id="2bb2eb3c-4706-4d1a-a019-bcb0f910e364" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to db-get-books" doc:id="383fd1cc-9357-4078-a206-132275b6ffc4" name="db-get-books"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>
